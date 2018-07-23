@@ -57,11 +57,11 @@ class BookList extends React.Component{
     }
   }
 
-  onSearch = (text) => {
+  handleSearch = (text) => {
   	console.log(text);
 	}
 
-	onNew = () => {
+	handleNew = () => {
 		this.props.history.push('/books/new')
 	}
 
@@ -69,16 +69,17 @@ class BookList extends React.Component{
     const { visible, loading } = this.state;
     if (this.state.redirect) {
       return <Redirect push to={{
-        pathname:`/book/${this.state.currentId}`,
+        pathname:`/books/${this.state.currentId}`,
         state: { id: this.state.currentId }
       }} />;
     }
     return(
         <Content className="content">
 					<ActionBar
-						onNewButtonClicked={this.onNew}
-						onSearchChanged={this.onSearch}
+						onNewButtonClicked={this.handleNew}
+						onSearchChanged={this.handleSearch}
 					/>
+					<h2>Book List</h2>
 					<Table
 						onRow={(record) => {
 							return {

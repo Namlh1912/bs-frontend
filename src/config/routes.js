@@ -6,8 +6,8 @@ import { Route, Switch, withRouter, Link } from 'react-router-dom';
 import '../styles/app.css';
 import Login from '../containers/Login';
 import Home from '../containers/BookList';
-import Order from '../containers/Order';
-import User from '../containers/User';
+import OrderList from '../containers/OrderList';
+import UserList from '../containers/UserList';
 import OrderDetail from '../containers/OrderDetail';
 import UserDetail from '../containers/UserDetail';
 import BookDetail from '../containers/BookDetail';
@@ -39,17 +39,29 @@ class Routes extends React.Component {
 					theme={"light"}
 					mode="inline"
 					defaultSelectedKeys={[location.pathname]}
+					defaultOpenKeys={['1', '0']}
 					>
-					<Menu.Item key="/users">
-						<Icon type="user" />
-						<span>Users</span>
-						<Link to="/users"/>
-					</Menu.Item>
-					<Menu.Item key="/books">
-						<Icon type="book" />
-						<span>Books</span>
-						<Link to="/books"/>
-					</Menu.Item>
+					<SubMenu key="0" title={<span><Icon type="user" /><span>Users</span></span>}>
+						<Menu.Item key="/users/client">
+							Customers
+							<Link to="/users/client"/>
+						</Menu.Item>
+						<Menu.Item key="/users/admin">
+							Admins
+							<Link to="/users/admin"/>
+						</Menu.Item>
+					</SubMenu>
+					<SubMenu key="1" title={<span><Icon type="book" /><span>Books</span></span>}>
+						<Menu.Item key="/books/new">
+							Add new
+							<Link to="/books/new"/>
+						</Menu.Item>
+						<Menu.Item key="/books">
+							List
+							<Link to="/books"/>
+						</Menu.Item>
+					</SubMenu>
+
 					<Menu.Item key="/orders">
 						<Icon type="shopping-cart" />
 						<span>Orders</span>
@@ -98,14 +110,14 @@ class Routes extends React.Component {
 						<Route exact path='/home' component={Home} />
 
 						<Route path="/books/new" component={BookDetail}/>
-						<Route path="/books/:id" component={Home}/>
+						<Route path="/books/:id" component={BookDetail}/>
 						<Route path="/books" component={Home}/>
 
 
-						<Route path='/orders' component={Order}/>
+						<Route path='/orders' component={OrderList}/>
 						<Route path="/orders/:id" component={Home}/>
 
-						<Route path='/users' component={User}/>
+						<Route path='/users' component={UserList}/>
 						<Route path="/users/:id" component={Home}/>
 					</Switch>
 				</Layout>

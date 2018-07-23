@@ -61,7 +61,7 @@ const columns = [{
 }];
 
 
-class User extends React.Component{
+class OrderList extends React.Component{
   constructor(props){
     super(props);
     this.state={
@@ -111,6 +111,30 @@ class User extends React.Component{
           <Button onClick={this.toggleCollapsed}>
             <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
           </Button>
+          <Menu
+            defaultSelectedKeys={['2']}
+            mode="inline"
+            theme="dark"
+            inlineCollapsed={this.state.collapsed}
+          >
+            <Menu.Item key="1">
+              <Icon type="pie-chart" />
+              <span>Dashboard 2</span>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Icon type="book" />
+              <span>Book Management</span>
+            </Menu.Item>
+            <Menu.Item key="3">
+              <Icon type="user" />
+              <span>User Management</span>
+            </Menu.Item>
+            <SubMenu key="sub1" title={<span><Icon type="appstore" /><span>Setting</span></span>}>
+              <Menu.Item key="5">Change theme</Menu.Item>
+              <Menu.Item key="6">Change language</Menu.Item>
+              <Menu.Item key="7">Change font color</Menu.Item>
+            </SubMenu>
+          </Menu>
         </div>
         <div className="main-menu">
           <div className="header-container">
@@ -160,4 +184,4 @@ class User extends React.Component{
   }
 }
 
-export default User;
+export default OrderList;

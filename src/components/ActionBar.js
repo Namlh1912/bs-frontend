@@ -34,6 +34,7 @@ class ActionBar extends React.Component {
 						)
 					: null
 				}
+				{ this.props.children }
 			</div>
 		)
 	}

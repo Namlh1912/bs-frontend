@@ -1,58 +1,74 @@
 import React from 'react';
-import { FormGroup, ControlLabel, FormControl, Button, Glyphicon } from 'react-bootstrap';
-import {Link} from 'react-router-dom';
-import '../styles/form.css'
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { login} from "../redux/actions/auth";
+import { Form, Icon, Input, Button, Checkbox, Layout } from 'antd';
 
-const user = {
-  username: 'namlh1912',
-  password: 'abcdef',
-}
+const FormItem = Form.Item;
 
+@connect(
+	state => ({
+		token: state.me.token
+	}),
+	dispatch => ({
+		login: bindActionCreators(login, dispatch),
+	})
+)
 class Login extends React.Component {
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				console.log('Received values of form: ', values);
+				this.props.login(values.username, values.password);
+			}
+		});
+	}
 
-  handleUserLogin = (e) =>{
-    e.preventDefault();
-    const username = this.username.value;
-    const password = this.password.value;
-
-    if(username === user.username && password === user.password){
-      console.log('correct');
-    }
-  }
-
-  render(){
-    return(
-      <div className="container form-wrapper">
-        <div id="login-form">
-          <h3><Glyphicon glyph="lock" /> Login</h3>
-          <form onSubmit={this.handleUserLogin}>
-            <FormGroup controlId="Username">
-              <ControlLabel className="text"> Username</ControlLabel>
-              <FormControl
-                type="text"
-                inputRef={ref=>{this.username = ref ;}}
-              />
-            </FormGroup>
-            <FormGroup controlId="Password">
-              <ControlLabel className="text">
-                Password
-              </ControlLabel>
-              <FormControl
-                type="password"
-                inputRef={ref=>{this.password = ref ;}}
-              />
-            </FormGroup>
-            <div style={{textAlign:'center'}}>
-              <Button type="submit" bsClass="btn submit" >Submit</Button>
-            </div>
-          </form>
-          <div className="login-footer">
-            <p>Forgot <Link to="#">Password?</Link> </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+	render() {
+		const { getFieldDecorator } = this.props.form;
+		return (
+      <Layout className="login-layout">
+				<Layout.Header className="header">
+					<div className="logo" />
+					<div className="title">Book Outlet</div>
+        </Layout.Header>
+        <Layout.Content className="login-content">
+          <h1><b>Log</b> In</h1>
+          <h2>Administrator Portal</h2>
+          <Form onSubmit={this.handleSubmit} className="login-form">
+            <FormItem>
+              {getFieldDecorator('userName', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+              })(
+                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+              )}
+            </FormItem>
+            <FormItem>
+              {getFieldDecorator('password', {
+                rules: [{ required: true, message: 'Please input your Password!' }],
+              })(
+                <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+              )}
+            </FormItem>
+            <FormItem>
+              {getFieldDecorator('remember', {
+                valuePropName: 'checked',
+                initialValue: true,
+              })(
+                <Checkbox>Remember me</Checkbox>
+              )}
+              <a className="login-form-forgot" href="">Forgot password</a>
+              <Button type="primary" htmlType="submit" className="login-form-button">
+                Log in
+              </Button>
+            </FormItem>
+          </Form>
+				</Layout.Content>
+			</Layout>
+		);
+	}
 }
 
-export default Login;
+const WrappedNormalLoginForm = Form.create()(Login);
+export default WrappedNormalLoginForm;

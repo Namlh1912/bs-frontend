@@ -1,6 +1,9 @@
 import React from 'react';
 import books from '../mock/mock-book';
-import { Form, Input, Button, InputNumber, Upload, Icon, Modal } from 'antd';
+import { Form, Input, Button, InputNumber, Upload, Icon, Modal, Layout } from 'antd';
+import ActionBar from '../components/ActionBar';
+
+const { Content} = Layout;
 
 const FormItem = Form.Item;
 
@@ -16,10 +19,6 @@ class BookDetail extends React.Component{
     }
   }
 
-  componentDidMount() {
-   console.log( 'A Redirect should never update.');
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -29,81 +28,9 @@ class BookDetail extends React.Component{
     });
   }
 
-  editableForm = (data) =>{
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 12 },
-    };
-    return(
-      data.map(item => (
-        <Form key={item.id} onSubmit={this.handleSubmit}>
-          <FormItem
-            label="Tittle"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('title', {
-              rules: [{ required: true, message: 'Please input your title!' }],
-              initialValue:item.title
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem
-            label="Type"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('type', {
-              rules: [{ required: true, message: 'Please input your type!' }],
-              initialValue:item.type
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem
-            label="Publisher"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('title', {
-              rules: [{ required: true, message: 'Please input your publisher!' }],
-              initialValue:item.publisher
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem
-            label="Author"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('author', {
-              rules: [{ required: true, message: 'Please input your author!' }],
-              initialValue:item.author
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Price"
-          >
-            {getFieldDecorator('input-number', { initialValue: item.price })(
-              <InputNumber min={0} max={1000} />
-            )}
-            <span className="ant-form-text"> $</span>
-          </FormItem>
-          <FormItem
-            wrapperCol={{ span: 12, offset: 5 }}
-          >
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </FormItem>
-        </Form>
-      ))
-    )
+  handleCancel = () => {
+		this.props.history.push('/books')
   }
-
-  handleCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = (file) => {
     this.setState({
@@ -114,29 +41,126 @@ class BookDetail extends React.Component{
 
   handleChange = ({ file }) => this.setState({ file })
 
-  render(){
-    const currentId = this.props.location.state.id;
-    const currentItem = books.filter(item => item.id === currentId);
-    const { previewVisible, previewImage, fileList } = this.state;
-    const uploadButton = (
-      <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
+	normFile = (e) => {
+		console.log('Upload event:', e);
+		if (Array.isArray(e)) {
+			return e;
+		}
+		return e && e.fileList;
+	}
+
+  render() {
+		console.log(this.props.match);
+		const { getFieldDecorator } = this.props.form;
+		const formItemLayout = {
+			labelCol: {
+				xs: { span: 24 },
+				sm: { span: 4 },
+			},
+			wrapperCol: {
+				xs: { span: 24 },
+				sm: { span: 18 },
+			},
+		};
     return(
-      <div>
-        Edit Book
-        <div className="left-side-book-detail">
+			<Content className="content">
+        <ActionBar>
+					<Button
+						type="primary"
+						icon="save"
+					>
+						Save
+					</Button>
+					<Button
+						type="default"
+						icon="close"
+						onClick={this.handleCancel}
+            style={{marginLeft: 5}}
+					>
+						Cancel
+					</Button>
+        </ActionBar>
+        <h2>New Book</h2>
+        <Form>
+					<FormItem
+						{...formItemLayout}
+						label="Upload"
+						extra="Upload book cover image"
+					>
+						{getFieldDecorator('upload', {
+							valuePropName: 'fileList',
+							getValueFromEvent: this.normFile,
+						})(
+							<Upload name="logo" action="/upload.do" listType="picture">
+								<Button>
+									<Icon type="upload" /> Click to upload
+								</Button>
+							</Upload>
+						)}
+					</FormItem>
+					<FormItem
+						label="Title"
+						{...formItemLayout}
+					>
+						{getFieldDecorator('title', {
+							rules: [{ required: true, message: 'Please input your title!' }],
+						})(
+							<Input placeholder="Title"/>
+						)}
+					</FormItem>
 
-        </div>
-        <div className="right-side-book-detail">
-          { this.editableForm(currentItem) }
+					<FormItem
+						label="Type"
+						{...formItemLayout}
+					>
+						{getFieldDecorator('title', {
+							rules: [{ required: true, message: 'Please input your title!' }],
+							initialValue:"asd"
+						})(
+							<Input/>
+						)}
+					</FormItem>
 
-        </div>
-      </div>
+					<FormItem
+						label="Publisher"
+						{...formItemLayout}
+					>
+						{getFieldDecorator('title', {
+							rules: [{ required: true, message: 'Please input your title!' }],
+							initialValue:"asd"
+						})(
+							<Input/>
+						)}
+					</FormItem>
+
+					<FormItem
+						label="Author"
+						{...formItemLayout}
+					>
+						{getFieldDecorator('title', {
+							rules: [{ required: true, message: 'Please input your title!' }],
+							initialValue:"asd"
+						})(
+							<Input/>
+						)}
+					</FormItem>
+
+					<FormItem
+						label="Price"
+						{...formItemLayout}
+					>
+						{getFieldDecorator('title', {
+							rules: [{ required: true, message: 'Please input your title!' }],
+							initialValue:"asd"
+						})(
+							<Input/>
+						)}
+					</FormItem>
+        </Form>
+      </Content>
     )
   }
 }
 
-export default BookDetail;
+const WrappedBookDetail = Form.create()(BookDetail);
+export default WrappedBookDetail;
