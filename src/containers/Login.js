@@ -8,10 +8,11 @@ const FormItem = Form.Item;
 
 @connect(
 	state => ({
-		token: state.me.token
+		token: state.me.token,
+		loading: state.me.loading,
 	}),
 	dispatch => ({
-		login: bindActionCreators(login, dispatch),
+		handleLogin: bindActionCreators(login, dispatch),
 	})
 )
 class Login extends React.Component {
@@ -20,7 +21,7 @@ class Login extends React.Component {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log('Received values of form: ', values);
-				this.props.login(values.username, values.password);
+				this.props.handleLogin(values.username, values.password);
 			}
 		});
 	}
@@ -38,7 +39,7 @@ class Login extends React.Component {
           <h2>Administrator Portal</h2>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <FormItem>
-              {getFieldDecorator('userName', {
+              {getFieldDecorator('username', {
                 rules: [{ required: true, message: 'Please input your username!' }],
               })(
                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
@@ -59,7 +60,7 @@ class Login extends React.Component {
                 <Checkbox>Remember me</Checkbox>
               )}
               <a className="login-form-forgot" href="">Forgot password</a>
-              <Button type="primary" htmlType="submit" className="login-form-button">
+              <Button type="primary" htmlType="submit" className="login-form-button" loading={this.props.loading}>
                 Log in
               </Button>
             </FormItem>

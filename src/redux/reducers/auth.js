@@ -1,7 +1,7 @@
 import store from 'store/dist/store.modern';
 
 const INITIAL_STATE = {
-	isLoading: false,
+  loading: false,
 	token: store.get("token"),
 	username: null,
 	error: null
@@ -14,7 +14,7 @@ export default function authReducer(state = INITIAL_STATE, action) {
 		case "USER_LOGIN":
 			return {
 				...state,
-				isLoading: true
+				loading: true
 			}
 
 		case "USER_LOGIN_SUCCESS":
@@ -25,7 +25,7 @@ export default function authReducer(state = INITIAL_STATE, action) {
 			})
 			return {
 				...state,
-				isLoading: false,
+        loading: false,
 				token: action.result.token,
 				username: action.result.username,
 				error: null
@@ -34,7 +34,7 @@ export default function authReducer(state = INITIAL_STATE, action) {
 		case "USER_LOGIN_FAILURE":
 			return {
 				...state,
-				isLoading: false,
+        loading: false,
 				token: null,
 				error: action.error,
 				username: null
@@ -44,7 +44,7 @@ export default function authReducer(state = INITIAL_STATE, action) {
 			store.remove("token")
 			return {
 				...state,
-				isLoading: false,
+        loading: false,
 				token: null,
 				username: null,
 				error: null

@@ -14,6 +14,5 @@ export default function configureStore(initialState = {}) {
 		)),
 	);
 
-	global.store = store;
 	return store;
 }

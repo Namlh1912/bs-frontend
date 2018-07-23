@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './config/routes';
 import configureStore from './config/store';
+import './config/api';
 
 import 'antd/dist/antd.css';
 import './index.css';
