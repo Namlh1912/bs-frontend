@@ -1,10 +1,10 @@
 import React from 'react';
-import books from '../mock-data/mock-book';
+import books from '../mock/mock-book';
 import { Form, Input, Button, InputNumber, Upload, Icon, Modal } from 'antd';
 
 const FormItem = Form.Item;
 
-class App extends React.Component{
+class BookDetail extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -139,5 +139,4 @@ class App extends React.Component{
   }
 }
 
-const BookDetail = Form.create()(App);
 export default BookDetail;

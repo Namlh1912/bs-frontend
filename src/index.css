@@ -1,5 +1,45 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.header {
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    background: #fff;
+    -webkit-box-shadow: 0 2px 8px #f0f1f2;
+    box-shadow: 0 2px 8px #f0f1f2;
+    position: relative;
+    z-index: 10;
+    max-width: 100%;
+    color: #ca212c;
+}
+.header .logo {
+    width: 120px;
+    height: 54px;
+    background: url("assets/images/book_outlet_logo.png") no-repeat;
+    background-size: contain;
+    margin: 5px -30px 5px 0;
+    float: left;
+}
+
+.header .title {
+    font-weight: bold;
+    font-size: 22px;
+    float: left;
+}
+
+.content {
+    padding-top: 30px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.ant-menu-horizontal {
+    border-bottom: 0px solid #e8e8e8;
+}
+
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+    border-right: 0px solid #e8e8e8;
 }

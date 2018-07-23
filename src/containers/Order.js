@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Input, Button, Modal, Menu, Icon } from 'antd';
 import { Redirect } from 'react-router-dom';
-import books from '../mock-data/mock-book';
+import books from '../mock/mock-book';
 
 const Search = Input.Search;
 const SubMenu = Menu.SubMenu;
