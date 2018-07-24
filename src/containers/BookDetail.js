@@ -3,7 +3,7 @@ import { Form, Input, Button, Row, Col, Layout, Icon } from 'antd';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {create} from "../redux/actions/book";
+import {create, detail, update} from "../redux/actions/book";
 
 const { Content} = Layout;
 
@@ -12,19 +12,26 @@ const FormItem = Form.Item;
 @connect(
 	state => ({
 		loading: state.book.loading,
+		current: state.book.current,
 	}),
 	dispatch => ({
 		createBook: bindActionCreators(create, dispatch),
+		updateBook: bindActionCreators(update, dispatch),
+		detailBook: bindActionCreators(detail, dispatch),
 	})
 )
 class BookDetail extends React.Component{
   constructor(props){
     super(props);
 
+    // Check current mode
 		let mode = 'New';
-		if (this.props.match.params.hasOwnProperty('id')) mode = 'Edit';
-		console.log(this.props.match);
+		if (this.props.match.params.hasOwnProperty('id')) {
+			mode = 'Edit';
+			this.props.detailBook(this.props.match.params.id);
+		}
 
+		// Initiate state
     this.state = {
       number: 0,
       loading: false,
@@ -39,6 +46,8 @@ class BookDetail extends React.Component{
       if (!err) {
         if (this.state.mode === 'New') {
 					this.props.createBook(values);
+				} else {
+					this.props.updateBook(this.props.match.params.id, values);
 				}
       }
     });
@@ -57,13 +66,13 @@ class BookDetail extends React.Component{
 	renderForm = () => {
 		const { getFieldDecorator } = this.props.form;
   	return (
-			<Form layout="vertical" id="form">
+			<Form layout="vertical" loading={this.props.loading}>
 				<FormItem
 					label="Book Cover"
 				>
 					{getFieldDecorator('imageUrl', {
 						rules: [{ required: true, message: 'This field is required' }],
-
+						initialValue: this.props.current ? this.props.current.imageUrl : '',
 					})(
 						<Input
 							addonAfter={<Icon type="link" />}
@@ -77,6 +86,7 @@ class BookDetail extends React.Component{
 				>
 					{getFieldDecorator('title', {
 						rules: [{ required: true, message: 'This field is required' }],
+						initialValue: this.props.current ? this.props.current.title : '',
 					})(
 						<Input placeholder="Book title"/>
 					)}
@@ -87,6 +97,7 @@ class BookDetail extends React.Component{
 				>
 					{getFieldDecorator('category', {
 						rules: [{ required: true, message: 'This field is required' }],
+						initialValue: this.props.current ? this.props.current.category : '',
 					})(
 						<Input placeholder="Book category"/>
 					)}
@@ -97,6 +108,7 @@ class BookDetail extends React.Component{
 				>
 					{getFieldDecorator('publisher', {
 						rules: [{ required: true, message: 'This field is required' }],
+						initialValue: this.props.current ? this.props.current.publisher : '',
 					})(
 						<Input placeholder="Publisher name"/>
 					)}
@@ -107,6 +119,7 @@ class BookDetail extends React.Component{
 				>
 					{getFieldDecorator('author', {
 						rules: [{ required: true, message: 'This field is required' }],
+						initialValue: this.props.current ? this.props.current.author : '',
 					})(
 						<Input placeholder="Author name"/>
 					)}
@@ -117,6 +130,7 @@ class BookDetail extends React.Component{
 				>
 					{getFieldDecorator('price', {
 						rules: [{ required: true, message: 'This field is required' }],
+						initialValue: this.props.current ? this.props.current.price : '',
 					})(
 						<Input placeholder="0.0" addonAfter="USD"/>
 					)}
@@ -127,7 +141,6 @@ class BookDetail extends React.Component{
 
   render() {
 		console.log(this.props.match);
-
     return(
 			<Content className="content">
         <ActionBar>
@@ -151,7 +164,15 @@ class BookDetail extends React.Component{
 				<Row gutter={8} justify="center">
 					<Col lg={6} md={8} sm={24} xs={24}>
 						<div className="book-cover">
-							<div className="image" style={{backgroundImage: `url(${this.state.coverURL})`}}></div>
+							<div
+								className="image"
+								style={{
+									backgroundImage: `url(${this.props.current && this.state.coverURL === '' ? this.props.current.imageUrl : this.state.coverURL})`,
+									backgroundRepeat: 'no-repeat',
+									backgroundPosition: 'center',
+								}}>
+
+							</div>
 						</div>
 					</Col>
 					<Col lg={18} md={16} sm={24} xs={24}>

@@ -3,16 +3,19 @@ import store from 'store/dist/store.modern';
 const INITIAL_STATE = {
 	loading: false,
 	list: [],
+	current: null,
 }
 
 export default function bookReducer(state = INITIAL_STATE, action) {
 	// console.log(action.type)
 
 	switch (action.type) {
+		case "BOOK_DETAIL":
 		case "BOOK_CREATE":
 		case "BOOK_LIST":
 			return {
 				...state,
+				current: null,
 				loading: true
 			}
 
@@ -23,11 +26,27 @@ export default function bookReducer(state = INITIAL_STATE, action) {
 				list: action.result.data,
 			}
 
-		case "BOOK_LIST_FAILURE":
+		case "BOOK_UPDATE_SUCCESS":
+		case "BOOK_CREATE_SUCCESS":
 			return {
 				...state,
 				loading: false,
-				list: [],
+			}
+
+
+		case "BOOK_DETAIL_SUCCESS":
+			return {
+				...state,
+				loading: false,
+				current: action.result.data,
+			}
+
+		case "BOOK_UPDATE_FAILURE":
+		case "BOOK_LIST_FAILURE":
+		case "BOOK_CREATE_FAILURE":
+			return {
+				...state,
+				loading: false,
 			}
 
 		default:

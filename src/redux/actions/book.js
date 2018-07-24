@@ -42,7 +42,56 @@ export function create (data) {
 			if (response.data.data) {
 				dispatch({type: "BOOK_CREATE_SUCCESS"});
 				dispatch(push('/books'));
-				console.log('adfsadf');
+			} else {
+				dispatch({type: "BOOK_CREATE_FAILURE"});
+			}
+		} catch (e) {
+			dispatch({type: "BOOK_CREATE_FAILURE"});
+		}
+	}
+}
+
+export function update (id, data) {
+	return async dispatch => {
+		dispatch({type: "BOOK_UPDATE"});
+
+		try {
+			const response = await axios({
+				method: 'put',
+				url: `api/admin/book/${id}`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				data
+			});
+
+			if (response.data.data) {
+				dispatch({type: "BOOK_UPDATE_SUCCESS"});
+				dispatch(push('/books'));
+			} else {
+				dispatch({type: "BOOK_UPDATE_FAILURE"});
+			}
+		} catch (e) {
+			dispatch({type: "BOOK_UPDATE_FAILURE"});
+		}
+	}
+}
+
+export function detail (id) {
+	return async dispatch => {
+		dispatch({type: "BOOK_DETAIL"});
+
+		try {
+			const response = await axios({
+				method: 'get',
+				url: `api/admin/book/${id}`,
+			});
+
+			if (response.data.data) {
+				const result = {
+					data: response.data.data,
+				}
+				dispatch({type: "BOOK_DETAIL_SUCCESS", result});
 			} else {
 				dispatch({type: "BOOK_CREATE_FAILURE"});
 			}
