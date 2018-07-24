@@ -1,20 +1,20 @@
 import React from 'react';
-import { Table, Layout } from 'antd';
+import { Table, Layout, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
-import {list} from "../redux/actions/user";
+import {list} from "../redux/actions/order";
 import {connect} from "react-redux";
 
 const { Content} = Layout;
 
 @connect(
 	state => ({
-		users: state.user.list,
-		loading: state.user.isLoading,
+		orders: state.order.list,
+		loading: state.order.isLoading,
 	}),
 	dispatch => ({
-		getUserList: bindActionCreators(list, dispatch),
+		getOrderList: bindActionCreators(list, dispatch),
 	})
 )
 class UserList extends React.Component{
@@ -55,7 +55,7 @@ class UserList extends React.Component{
 	}];
 
 	componentDidMount() {
-		this.props.getUserList();
+		this.props.getOrderList();
 	}
 
 	handleSearch = (text) => {
@@ -67,13 +67,22 @@ class UserList extends React.Component{
 			<Content className="content">
 				<ActionBar
 					onSearchChanged={this.handleSearch}
-				/>
+				>
+					<Button
+						type="default"
+						icon="reload"
+						onClick={() => {this.props.getOrderList();}}
+						style={{marginLeft: 5}}
+					>
+						Reload
+					</Button>
+				</ActionBar>
 				<h2>Order List</h2>
 				<Table
 					loading={this.props.loading}
 					rowKey={books => books.id}
 					columns={this.columns}
-					dataSource={this.props.users}
+					dataSource={this.props.orders}
 					pagination={false}
 				/>
 			</Content>

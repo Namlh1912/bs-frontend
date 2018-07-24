@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Layout } from 'antd';
+import { Table, Layout, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
@@ -67,7 +67,16 @@ class UserList extends React.Component{
 			<Content className="content">
 				<ActionBar
 					onSearchChanged={this.handleSearch}
-				/>
+				>
+					<Button
+						type="default"
+						icon="reload"
+						onClick={() => {this.props.getUserList();}}
+						style={{marginLeft: 5}}
+					>
+						Reload
+					</Button>
+				</ActionBar>
 				<h2>User List</h2>
 				<Table
 					loading={this.props.loading}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Layout, Modal } from 'antd';
+import { Table, Layout, Modal, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
@@ -20,6 +20,23 @@ const { Content} = Layout;
 )
 class BookList extends React.Component{
 	columns = [{
+		title: '',
+		dataIndex: 'imageUrl',
+		render: (text, record) => (
+			<div className="book-cover"  style={{width: 90, height: 120,}}>
+				<div
+					className="image"
+					style={{
+						backgroundImage: `url(${record.imageUrl})`,
+						backgroundRepeat: 'no-repeat',
+						backgroundPosition: 'center',
+						padding: 3,
+					}}>
+
+				</div>
+			</div>
+		),
+	}, {
 		title: 'Title',
 		dataIndex: 'title',
 		sorter: (a, b) => a.title.localeCompare(b.title),
@@ -96,7 +113,16 @@ class BookList extends React.Component{
 					<ActionBar
 						onNewButtonClicked={this.handleNew}
 						onSearchChanged={this.handleSearch}
-					/>
+					>
+						<Button
+							type="default"
+							icon="reload"
+							onClick={() => {this.props.getBookList();}}
+							style={{marginLeft: 5}}
+						>
+							Reload
+						</Button>
+					</ActionBar>
 					<h2>Book List</h2>
 					<Table
 						loading={this.props.loading}
