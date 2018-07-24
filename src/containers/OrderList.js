@@ -1,7 +1,7 @@
 import React from 'react';
 import fuse from 'fuse.js';
 import moment from 'moment';
-import { Table, Layout, Button, Badge, Dropdown, Menu, Icon } from 'antd';
+import { Table, Layout, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
@@ -90,14 +90,15 @@ class OrderList extends React.Component{
 
 	expandedRowRender = (record) => {
 		const columns = [
-			{ title: 'Item', dataIndex: 'productName', key: 'productName', render: (text) => this.renderColumnText(text), },
-			{ title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-			{ title: 'Total', dataIndex: 'totalPrice', key: 'totalPrice' },
+			{ title: 'Item', dataIndex: 'productName', render: (text) => this.renderColumnText(text), },
+			{ title: 'Quantity', dataIndex: 'quantity',  },
+			{ title: 'Total', dataIndex: 'totalPrice', },
 		];
 
 		return (
 			<Table
 				showHeader={false}
+				rowKey={item => item.id}
 				columns={columns}
 				dataSource={record.details}
 				pagination={false}
@@ -133,7 +134,7 @@ class OrderList extends React.Component{
 				<h2>Order List</h2>
 				<Table
 					loading={this.props.loading}
-					rowKey={books => books.id}
+					rowKey={item => item.id}
 					columns={this.columns}
 					dataSource={searchedData}
 					pagination={false}
