@@ -12,6 +12,7 @@
     "history": "^4.7.2",
     "less": "^3.8.0",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-app-rewire-antd": "^1.0.3",

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Table, Layout, Button } from 'antd';
+import fuse from 'fuse.js';
+import moment from 'moment';
+import { Table, Layout, Button, Badge, Dropdown, Menu, Icon } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
@@ -17,41 +19,63 @@ const { Content} = Layout;
 		getOrderList: bindActionCreators(list, dispatch),
 	})
 )
-class UserList extends React.Component{
+class OrderList extends React.Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchText : '',
+		}
+	}
+
+	renderColumnText = (text) => {
+		const {searchText} = this.state;
+		return searchText && text ? (
+			<span>
+            {text.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
+							fragment.toLowerCase() === searchText.toLowerCase()
+								? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
+						))}
+          </span>
+		) : text;
+	}
+
 	columns = [{
 		title: 'ID',
 		dataIndex: 'id',
 		key: 'id',
 	}, {
-		title: 'Username',
-		dataIndex: 'username',
+		title: 'Order No.',
+		dataIndex: 'orderCode',
 		sorter: (a, b) => a.username.localeCompare(b.username),
 		render: (text, record) => (
 			<span>
 				<a role="button"
-					 onClick={() => this.props.history.push(`/users/${record.id}`, record)}
+					 onClick={() => {}}
 					 style={{ marginRight: 8 }}
 				>
-					{record.username}
+					{this.renderColumnText(text)}
 				</a>
     </span>
 		),
 	}, {
-		title: 'Email',
-		dataIndex: 'email',
-		sorter: (a, b) => a.email.localeCompare(b.email),
+		title: 'Username',
+		dataIndex: 'customer',
+		sorter: (a, b) => a.customer.localeCompare(b.customer),
+		render: (text) => this.renderColumnText(text),
+	}, {
+		title: 'Date',
+		dataIndex: 'orderDate',
+		sorter: (a, b) => a.orderDate.localeCompare(b.orderDate),
+		render: (text, record) => (
+			<div>{moment(text).format('DD/MM/YYYY hh:mm')}</div>
+		)
 	},{
-		title: 'Mobile',
-		dataIndex: 'mobile',
+		title: 'Item Count',
+		dataIndex: 'details',
 		sorter: (a, b) => a.mobile.localeCompare(b.mobile),
-	}, {
-		title: 'Address',
-		dataIndex: 'address',
-		sorter: (a, b) => a.address.localeCompare(b.address),
-	}, {
-		title: 'Role',
-		dataIndex: 'roleTitle',
-		sorter: (a, b) => a.roleTitle.localeCompare(b.roleTitle),
+		render: (text, record) => (
+			<div>{record.details.length}</div>
+		)
 	}];
 
 	componentDidMount() {
@@ -59,10 +83,39 @@ class UserList extends React.Component{
 	}
 
 	handleSearch = (text) => {
-		console.log(text);
+		this.setState({
+			searchText: text,
+		})
 	}
 
+	expandedRowRender = (record) => {
+		const columns = [
+			{ title: 'Item', dataIndex: 'productName', key: 'productName', render: (text) => this.renderColumnText(text), },
+			{ title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
+			{ title: 'Total', dataIndex: 'totalPrice', key: 'totalPrice' },
+		];
+
+		return (
+			<Table
+				showHeader={false}
+				columns={columns}
+				dataSource={record.details}
+				pagination={false}
+			/>
+		);
+	};
+
 	render(){
+		let searchedData = this.props.orders;
+		if (this.state.searchText.length > 0) {
+			var options = {
+				keys: ['username', 'orderCode', 'details.productName'],
+				threshold: 0.1,
+			};
+			var f = new fuse(this.props.orders, options)
+			searchedData = f.search(this.state.searchText);
+		}
+
 		return(
 			<Content className="content">
 				<ActionBar
@@ -82,12 +135,13 @@ class UserList extends React.Component{
 					loading={this.props.loading}
 					rowKey={books => books.id}
 					columns={this.columns}
-					dataSource={this.props.orders}
+					dataSource={searchedData}
 					pagination={false}
+					expandedRowRender={this.expandedRowRender}
 				/>
 			</Content>
 		);
 	}
 }
 
-export default withRouter(UserList);
+export default withRouter(OrderList);

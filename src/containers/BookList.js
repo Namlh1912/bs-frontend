@@ -121,7 +121,6 @@ class BookList extends React.Component{
 		});
 	}
 
-
 	handleSearch = (text) => {
   	this.setState({
 			searchText: text,
