@@ -2,13 +2,13 @@ import qs from 'query-string';
 import axios from 'axios';
 
 export function login (username, password) {
-	return async (dispatch) => {
+	return async dispatch => {
 	  dispatch({type: "USER_LOGIN"});
 
 	  try {
-      const result = await axios({
+      const response = await axios({
         method: 'post',
-        url: 'user/login',
+        url: 'api/login',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -17,8 +17,14 @@ export function login (username, password) {
           password,
         }),
       });
-      console.log(result.headers);
-      dispatch({type: "USER_LOGIN_SUCCESS"}, {username, password});
+
+      const result = {
+				username,
+				password,
+				token: response.headers.authorization,
+				data: response.data.data,
+			}
+      dispatch({type: "USER_LOGIN_SUCCESS", result});
     } catch (e) {
       dispatch({type: "USER_LOGIN_FAILURE"});
     }

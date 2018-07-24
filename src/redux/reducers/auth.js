@@ -3,7 +3,7 @@ import store from 'store/dist/store.modern';
 const INITIAL_STATE = {
   loading: false,
 	token: store.get("token"),
-	username: null,
+	username: store.get("me") ? store.get("me").username : null,
 	error: null
 }
 
@@ -20,14 +20,13 @@ export default function authReducer(state = INITIAL_STATE, action) {
 		case "USER_LOGIN_SUCCESS":
 			const expires = new Date()
 			expires.setDate(expires.getDate() + 1)
-			store.set("token", action.result.token, {
-				expires
-			})
+			store.set("token", action.result.token);
+			store.set("me", action.result.data);
 			return {
 				...state,
         loading: false,
 				token: action.result.token,
-				username: action.result.username,
+				username: action.result.data.username,
 				error: null
 			}
 
@@ -41,7 +40,8 @@ export default function authReducer(state = INITIAL_STATE, action) {
 			}
 
 		case "USER_LOGOUT_SUCCESS":
-			store.remove("token")
+			store.remove("token");
+			store.remove("me");
 			return {
 				...state,
         loading: false,

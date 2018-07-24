@@ -24,10 +24,10 @@ axios.interceptors.request.use((config) => {
 }, (error) => {
   // Do something with request error
   const mess = error.response ? error.response.data.error.message : error.message;
-  toast.error(mess, { autoClose: 2000 });
+
   notification.error({
     message: 'Error',
-    description: mess,
+    description: error,
   });
   return Promise.reject(error);
 });
@@ -44,7 +44,12 @@ axios.interceptors.response.use(
     return response;
   }
   , (error) => {
-    const mess = error.response ? error.response.data.error.message : error.message;
+    let mess = "";
+		if (error.response.status === 401) {
+			mess = "Authentication error";
+		} else {
+			mess = error.response ? error.response.data.error.message : error.message;
+    }
 
     notification.error({
       message: 'Error',

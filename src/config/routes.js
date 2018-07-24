@@ -1,22 +1,27 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Layout, Icon, Menu } from 'antd';
-import {ToastContainer} from 'react-toastify';
 import { Route, Switch, withRouter, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import {connect} from "react-redux";
 
 import '../styles/app.css';
 import Login from '../containers/Login';
-import Home from '../containers/BookList';
+import BookList from '../containers/BookList';
 import OrderList from '../containers/OrderList';
 import UserList from '../containers/UserList';
-import OrderDetail from '../containers/OrderDetail';
-import UserDetail from '../containers/UserDetail';
 import BookDetail from '../containers/BookDetail';
+import Header from '../components/Header';
 
-const { Header, Sider, Footer } = Layout;
+
+const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
-
+@connect(
+	state => ({
+		token: state.me.token,
+	}),
+	null
+)
 class Routes extends React.Component {
 	state = {
 		collapsed: false,
@@ -83,45 +88,33 @@ class Routes extends React.Component {
     )
 
 		const Authenticated = () => (
-			<Layout style={{ minHeight: '100vh' }}>
-				<Header className="header">
-					<div className="logo" />
-					<div className="title">Book Outlet Admin</div>
-					<Menu
-						onClick={this.handleClick}
-						selectedKeys={[this.state.current]}
-						mode="horizontal"
-						style={{ lineHeight: '63px', float: 'right' }}
-					>
-						<SubMenu title={
-							<span>
-								<Icon type="meh-o" />
-								Nam Le
-								<Icon type="caret-down" style={{ marginLeft: 10, fontSize: 8}}/>
-							</span>
-						}>
-							<Menu.Item key="log-out">Log Out</Menu.Item>
-						</SubMenu>
-					</Menu>
-				</Header>
-				<Layout>
-					{this.renderSideMenu()}
-					<Switch>
-						<Route exact path='/home' component={Home} />
-
-						<Route path="/books/new" component={BookDetail}/>
-						<Route path="/books/:id" component={BookDetail}/>
-						<Route path="/books" component={Home}/>
+			this.props.token ?
+				(
+					<Layout style={{ minHeight: '100vh' }}>
+						<Header />
+						<Layout>
+							{this.renderSideMenu()}
+							<Switch>
+								<Route path="/books/new" component={BookDetail}/>
+								<Route path="/books/:id" component={BookDetail}/>
+								<Route path="/books" component={BookList}/>
 
 
-						<Route path='/orders' component={OrderList}/>
-						<Route path="/orders/:id" component={Home}/>
+								<Route path='/orders' component={OrderList}/>
+								<Route path="/orders/:id" component={BookList}/>
 
-						<Route path='/users' component={UserList}/>
-						<Route path="/users/:id" component={Home}/>
-					</Switch>
-				</Layout>
-			</Layout>
+								<Route path='/users' component={UserList}/>
+								<Route path="/users/:id" component={BookList}/>
+							</Switch>
+						</Layout>
+					</Layout>
+				) :
+				(
+					<Redirect push to={{
+						pathname:'/',
+					}} />
+				)
+
 		)
 
 

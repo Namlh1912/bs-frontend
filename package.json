@@ -22,7 +22,7 @@
     "redux-thunk": "^2.3.0",
     "store": "^2.0.12"
   },
-  "proxy": "http://earthling.studio:9969/",
+  "proxy": "http://localhost:3000/",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
