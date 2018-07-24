@@ -4,7 +4,6 @@ import { Route, Switch, withRouter, Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import {connect} from "react-redux";
 
-import '../styles/app.css';
 import Header from '../components/Header';
 import Login from '../containers/Login';
 import BookList from '../containers/BookList';

@@ -94,7 +94,7 @@ class UserList extends React.Component{
 		if (this.state.searchText.length > 0) {
 			var options = {
 				keys: ['email', 'username', 'mobile', 'address'],
-				threshold: 0.2,
+				threshold: 0.1,
 			};
 			var f = new fuse(this.props.users, options)
 			searchedData = f.search(this.state.searchText);

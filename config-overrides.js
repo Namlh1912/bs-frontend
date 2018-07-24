@@ -20,12 +20,20 @@
  * https://medium.com/@timarney/but-i-dont-wanna-eject-3e3da5826e39
  */
 
+const rewired = require('react-app-rewired')
+const rewireLess = require('react-app-rewire-less')
+const rewireAntd = require('react-app-rewire-antd')
 const { injectBabelPlugin } = require('react-app-rewired')
 
 
-module.exports = function override(config) {
-  // add your plugins or write your config here
-  const myPlugins = ['transform-decorators-legacy']
+module.exports = function override(config, env) {
 
-  return injectBabelPlugin(myPlugins, config)
+	config = rewired.injectBabelPlugin('transform-decorators-legacy', config);
+	config = rewireLess(config, env);
+	config = rewireLess.withLoaderOptions({
+		javascriptEnabled: true
+	})(config, env);
+
+
+  return config
 }

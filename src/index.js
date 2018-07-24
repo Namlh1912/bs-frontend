@@ -9,6 +9,7 @@ import './config/api';
 
 import 'antd/dist/antd.css';
 import './index.css';
+import './styles/theme.less';
 
 const history = createBrowserHistory();
 const store = configureStore(history);

@@ -137,7 +137,7 @@ class BookList extends React.Component{
   	if (this.state.searchText.length > 0) {
 			var options = {
 				keys: ['title', 'category', 'publisher', 'author'],
-				threshold: 0.2,
+				threshold: 0.1,
 			};
 			var f = new fuse(this.props.books, options)
 			searchedData = f.search(this.state.searchText);

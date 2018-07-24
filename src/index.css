@@ -8,7 +8,7 @@ body {
 .header {
     -webkit-transition: all .3s;
     transition: all .3s;
-    background: #fff;
+    background-color: #fff;
     -webkit-box-shadow: 0 2px 8px #f0f1f2;
     box-shadow: 0 2px 8px #f0f1f2;
     position: relative;
@@ -47,6 +47,10 @@ body {
 
 .ant-form-item {
     margin-bottom: 18px;
+}
+
+.ant-layout-header {
+    background: #ffffff !important;
 }
 
 .form-box {
