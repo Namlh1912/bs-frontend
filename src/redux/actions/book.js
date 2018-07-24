@@ -100,3 +100,29 @@ export function detail (id) {
 		}
 	}
 }
+
+export function remove (id, reload = false) {
+	return async dispatch => {
+		dispatch({type: "BOOK_DELETE"});
+
+		try {
+			const response = await axios({
+				method: 'delete',
+				url: `api/admin/book/${id}`,
+			});
+
+			if (response.data.data) {
+				dispatch({type: "BOOK_DELETE_SUCCESS"});
+				if (reload) {
+					dispatch(list());
+				} else {
+					dispatch(push('/books'));
+				}
+			} else {
+				dispatch({type: "BOOK_DELETE_FAILURE"});
+			}
+		} catch (e) {
+			dispatch({type: "BOOK_DELETE_FAILURE"});
+		}
+	}
+}

@@ -1,5 +1,3 @@
-import store from 'store/dist/store.modern';
-
 const INITIAL_STATE = {
 	loading: false,
 	list: [],
@@ -26,6 +24,7 @@ export default function bookReducer(state = INITIAL_STATE, action) {
 				list: action.result.data,
 			}
 
+		case "BOOK_DELETE_SUCCESS":
 		case "BOOK_UPDATE_SUCCESS":
 		case "BOOK_CREATE_SUCCESS":
 			return {
@@ -41,6 +40,7 @@ export default function bookReducer(state = INITIAL_STATE, action) {
 				current: action.result.data,
 			}
 
+		case "BOOK_DELETE_FAILURE":
 		case "BOOK_UPDATE_FAILURE":
 		case "BOOK_LIST_FAILURE":
 		case "BOOK_CREATE_FAILURE":

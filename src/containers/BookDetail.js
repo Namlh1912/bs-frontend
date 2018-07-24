@@ -3,7 +3,8 @@ import { Form, Input, Button, Row, Col, Layout, Icon } from 'antd';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {create, detail, update} from "../redux/actions/book";
+import {create, detail, update, remove} from "../redux/actions/book";
+import {Modal} from "antd/lib/index";
 
 const { Content} = Layout;
 
@@ -18,6 +19,7 @@ const FormItem = Form.Item;
 		createBook: bindActionCreators(create, dispatch),
 		updateBook: bindActionCreators(update, dispatch),
 		detailBook: bindActionCreators(detail, dispatch),
+		removeBook: bindActionCreators(remove, dispatch),
 	})
 )
 class BookDetail extends React.Component{
@@ -56,6 +58,16 @@ class BookDetail extends React.Component{
   handleCancel = () => {
 		this.props.history.push('/books')
   }
+
+	showConfirm = (id, handler) => {
+		Modal.confirm({
+			title: 'Do you Want to delete this book?',
+			content: 'This action cannot be reverted',
+			onOk() {
+				handler(id);
+			},
+		});
+	}
 
 	handleBookCoverChange = (e) => {
 		this.setState({
@@ -149,7 +161,7 @@ class BookDetail extends React.Component{
 						icon="save"
 						onClick={this.handleSubmit}
 					>
-						Save
+						{ this.state.mode === 'Edit' ? 'Update' : 'Save'}
 					</Button>
 					<Button
 						type="default"
@@ -159,6 +171,22 @@ class BookDetail extends React.Component{
 					>
 						Cancel
 					</Button>
+					{
+						this.state.mode === 'Edit' ?
+							(
+								<Button
+									type="danger"
+									icon="delete"
+									onClick={() => {this.showConfirm(this.props.match.params.id, this.props.removeBook)}}
+									style={{float: 'right', marginLeft: 5}}
+								>
+									Delete
+								</Button>
+							)
+							:
+								null
+					}
+
         </ActionBar>
         <h2>{this.state.mode} Book</h2>
 				<Row gutter={8} justify="center">
