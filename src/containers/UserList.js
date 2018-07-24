@@ -18,6 +18,25 @@ const { Content} = Layout;
 	})
 )
 class UserList extends React.Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchText : '',
+		}
+	}
+
+	renderColumnText = (text) => {
+		const {searchText} = this.state;
+		return searchText && text ? (
+			<span>
+            {text.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
+							fragment.toLowerCase() === searchText.toLowerCase()
+								? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
+						))}
+          </span>
+		) : text;
+	}
+
 	columns = [{
 		title: 'ID',
 		dataIndex: 'id',
@@ -32,7 +51,7 @@ class UserList extends React.Component{
 					 onClick={() => this.props.history.push(`/users/${record.id}`, record)}
 					 style={{ marginRight: 8 }}
 				>
-					{record.username}
+					{this.renderColumnText(text)}
 				</a>
     </span>
 		),
@@ -40,18 +59,22 @@ class UserList extends React.Component{
 		title: 'Email',
 		dataIndex: 'email',
 		sorter: (a, b) => a.email.localeCompare(b.email),
+		render: (text) => this.renderColumnText(text),
 	},{
 		title: 'Mobile',
 		dataIndex: 'mobile',
 		sorter: (a, b) => a.mobile.localeCompare(b.mobile),
+		render: (text) => this.renderColumnText(text),
 	}, {
 		title: 'Address',
 		dataIndex: 'address',
 		sorter: (a, b) => a.address.localeCompare(b.address),
+		render: (text) => this.renderColumnText(text),
 	}, {
 		title: 'Role',
 		dataIndex: 'roleTitle',
 		sorter: (a, b) => a.roleTitle.localeCompare(b.roleTitle),
+		render: (text) => this.renderColumnText(text),
 	}];
 
 	componentDidMount() {
@@ -59,7 +82,9 @@ class UserList extends React.Component{
 	}
 
 	handleSearch = (text) => {
-		console.log(text);
+		this.setState({
+			searchText: text,
+		})
 	}
 
 	render(){

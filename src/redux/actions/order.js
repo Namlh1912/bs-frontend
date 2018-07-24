@@ -7,7 +7,7 @@ export function list () {
 		try {
 			const response = await axios({
 				method: 'get',
-				url: 'api/admin/orders/list?page=1',
+				url: 'api/admin/orders?page=1',
 			});
 
 			if (response.data.data) {

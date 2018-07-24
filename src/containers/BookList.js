@@ -19,6 +19,25 @@ const { Content} = Layout;
 	})
 )
 class BookList extends React.Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchText : '',
+		}
+	}
+
+	renderColumnText = (text) => {
+		const {searchText} = this.state;
+		return searchText && text ? (
+			<span>
+            {text.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
+							fragment.toLowerCase() === searchText.toLowerCase()
+								? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
+						))}
+          </span>
+		) : text;
+	}
+
 	columns = [{
 		title: '',
 		dataIndex: 'imageUrl',
@@ -46,7 +65,7 @@ class BookList extends React.Component{
 					 onClick={() => this.props.history.push(`/books/${record.id}`, record)}
 					 style={{ marginRight: 8 }}
 				>
-					{record.title}
+					{this.renderColumnText(text)}
 				</a>
     </span>
 		),
@@ -55,14 +74,17 @@ class BookList extends React.Component{
 		width: 150,
 		dataIndex: 'category',
 		sorter: (a, b) => a.type.localeCompare(b.type),
+		render: (text) => this.renderColumnText(text),
 	},{
 		title: 'Publisher',
 		dataIndex: 'publisher',
 		sorter: (a, b) => a.publisher.localeCompare(b.publisher),
+		render: (text) => this.renderColumnText(text),
 	}, {
 		title: 'Author',
 		dataIndex: 'author',
 		sorter: (a, b) => a.author.localeCompare(b.author),
+		render: (text) => this.renderColumnText(text),
 	}, {
 		title: 'Price',
 		dataIndex: 'price',
@@ -100,7 +122,9 @@ class BookList extends React.Component{
 
 
 	handleSearch = (text) => {
-  	console.log(text);
+  	this.setState({
+			searchText: text,
+		})
 	}
 
 	handleNew = () => {

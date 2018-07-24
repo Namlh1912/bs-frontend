@@ -29,6 +29,7 @@ class ActionBar extends React.Component {
 							<Search
 								placeholder="Search"
 								onSearch={(text) => {this.props.onSearchChanged(text)}}
+								onChange={(text) => {this.props.onSearchChanged(text.target.value)}}
 								style={{ width: 200, float: 'right' }}
 							/>
 						)
