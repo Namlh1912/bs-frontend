@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-	loading: false,
+	isLoading: false,
 	list: [],
 	current: null,
 }
@@ -8,19 +8,21 @@ export default function bookReducer(state = INITIAL_STATE, action) {
 	// console.log(action.type)
 
 	switch (action.type) {
+		case "BOOK_DELETE":
+		case "BOOK_UPDATE":
 		case "BOOK_DETAIL":
 		case "BOOK_CREATE":
 		case "BOOK_LIST":
 			return {
 				...state,
 				current: null,
-				loading: true
+				isLoading: true,
 			}
 
 		case "BOOK_LIST_SUCCESS":
 			return {
 				...state,
-				loading: false,
+				isLoading: false,
 				list: action.result.data,
 			}
 
@@ -29,24 +31,25 @@ export default function bookReducer(state = INITIAL_STATE, action) {
 		case "BOOK_CREATE_SUCCESS":
 			return {
 				...state,
-				loading: false,
+				isLoading: false,
 			}
 
 
 		case "BOOK_DETAIL_SUCCESS":
 			return {
 				...state,
-				loading: false,
+				isLoading: false,
 				current: action.result.data,
 			}
 
 		case "BOOK_DELETE_FAILURE":
+		case "BOOK_DETAIL_FAILURE":
 		case "BOOK_UPDATE_FAILURE":
 		case "BOOK_LIST_FAILURE":
 		case "BOOK_CREATE_FAILURE":
 			return {
 				...state,
-				loading: false,
+				isLoading: false,
 			}
 
 		default:

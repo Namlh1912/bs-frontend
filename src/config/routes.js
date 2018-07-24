@@ -5,12 +5,13 @@ import { Redirect } from 'react-router-dom';
 import {connect} from "react-redux";
 
 import '../styles/app.css';
+import Header from '../components/Header';
 import Login from '../containers/Login';
 import BookList from '../containers/BookList';
-import OrderList from '../containers/OrderList';
-import UserList from '../containers/UserList';
 import BookDetail from '../containers/BookDetail';
-import Header from '../components/Header';
+import UserList from '../containers/UserList';
+import UserDetail from '../containers/UserDetail';
+import OrderList from '../containers/OrderList';
 
 
 const { Sider } = Layout;
@@ -46,16 +47,11 @@ class Routes extends React.Component {
 					defaultSelectedKeys={[location.pathname]}
 					defaultOpenKeys={['1', '0']}
 					>
-					<SubMenu key="0" title={<span><Icon type="user" /><span>Users</span></span>}>
-						<Menu.Item key="/users/client">
-							Customers
-							<Link to="/users/client"/>
-						</Menu.Item>
-						<Menu.Item key="/users/admin">
-							Admins
-							<Link to="/users/admin"/>
-						</Menu.Item>
-					</SubMenu>
+					<Menu.Item key="/users">
+						<Icon type="user" />
+						<span>Users</span>
+						<Link to="/users"/>
+					</Menu.Item>
 					<SubMenu key="1" title={<span><Icon type="book" /><span>Books</span></span>}>
 						<Menu.Item key="/books/new">
 							Add new
@@ -103,8 +99,8 @@ class Routes extends React.Component {
 								<Route path='/orders' component={OrderList}/>
 								<Route path="/orders/:id" component={BookList}/>
 
+								<Route path="/users/:id" component={UserDetail}/>
 								<Route path='/users' component={UserList}/>
-								<Route path="/users/:id" component={BookList}/>
 							</Switch>
 						</Layout>
 					</Layout>

@@ -18,7 +18,6 @@ axios.interceptors.request.use((config) => {
   return config;
 }, (error) => {
   // Do something with request error
-  const mess = error.response ? error.response.data.error.message : error.message;
 
   notification.error({
     message: 'Error',
@@ -35,7 +34,7 @@ axios.interceptors.response.use(
       message: 'Success',
       description: 'Done',
     });
-    console.log(response.headers.Authorization)
+
     return response;
   }
   , (error) => {

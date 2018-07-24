@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Layout, Modal } from 'antd';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
 import {bindActionCreators} from "redux";
 import {list, remove} from "../redux/actions/book";
@@ -11,7 +11,7 @@ const { Content} = Layout;
 @connect(
 	state => ({
 		books: state.book.list,
-		loading: state.book.loading,
+		loading: state.book.isLoading,
 	}),
 	dispatch => ({
 		getBookList: bindActionCreators(list, dispatch),
@@ -25,7 +25,7 @@ class BookList extends React.Component{
 		sorter: (a, b) => a.title.localeCompare(b.title),
 		render: (text, record) => (
 			<span>
-				<a href="javascript:;"
+				<a role="button"
 					 onClick={() => this.props.history.push(`/books/${record.id}`, record)}
 					 style={{ marginRight: 8 }}
 				>
@@ -57,7 +57,7 @@ class BookList extends React.Component{
 		width: 80,
 		render: (text, record) => (
 			<span>
-				<a href="javascript:;"
+				<a role="button"
 					 onClick={() => this.showConfirm(record.id, this.props.removeBook)}
 					 style={{ marginRight: 8 }}
 				>
@@ -66,10 +66,6 @@ class BookList extends React.Component{
     </span>
 		),
 	}];
-
-  constructor(props){
-    super(props);
-  }
 
   componentDidMount() {
   	this.props.getBookList();

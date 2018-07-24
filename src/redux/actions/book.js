@@ -93,10 +93,10 @@ export function detail (id) {
 				}
 				dispatch({type: "BOOK_DETAIL_SUCCESS", result});
 			} else {
-				dispatch({type: "BOOK_CREATE_FAILURE"});
+				dispatch({type: "BOOK_DETAIL_FAILURE"});
 			}
 		} catch (e) {
-			dispatch({type: "BOOK_CREATE_FAILURE"});
+			dispatch({type: "BOOK_DETAIL_FAILURE"});
 		}
 	}
 }

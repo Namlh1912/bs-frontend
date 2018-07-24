@@ -12,7 +12,7 @@ const FormItem = Form.Item;
 
 @connect(
 	state => ({
-		loading: state.book.loading,
+		loading: state.book.isLoading,
 		current: state.book.current,
 	}),
 	dispatch => ({
@@ -78,7 +78,7 @@ class BookDetail extends React.Component{
 	renderForm = () => {
 		const { getFieldDecorator } = this.props.form;
   	return (
-			<Form layout="vertical" loading={this.props.loading}>
+			<Form layout="vertical" hideRequiredMark>
 				<FormItem
 					label="Book Cover"
 				>
@@ -152,7 +152,6 @@ class BookDetail extends React.Component{
 	}
 
   render() {
-		console.log(this.props.match);
     return(
 			<Content className="content">
         <ActionBar>

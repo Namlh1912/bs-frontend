@@ -18,7 +18,7 @@ export function login (username, password) {
         }),
       });
 
-			if (response.data.data.roleTitle != "admin") {
+			if (response.data.data.roleTitle !== "admin") {
 				dispatch({type: "USER_LOGIN_FAILURE"});
 			} else {
 				const result = {
