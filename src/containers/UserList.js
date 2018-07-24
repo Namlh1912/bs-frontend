@@ -1,3 +1,4 @@
+import fuse from 'fuse.js';
 import React from 'react';
 import { Table, Layout, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -22,6 +23,7 @@ class UserList extends React.Component{
 		super(props);
 		this.state = {
 			searchText : '',
+			searchedData: null,
 		}
 	}
 
@@ -88,6 +90,16 @@ class UserList extends React.Component{
 	}
 
 	render(){
+		let searchedData = this.props.users;
+		if (this.state.searchText.length > 0) {
+			var options = {
+				keys: ['email', 'username', 'mobile', 'address'],
+				threshold: 0.2,
+			};
+			var f = new fuse(this.props.users, options)
+			searchedData = f.search(this.state.searchText);
+		}
+
 		return(
 			<Content className="content">
 				<ActionBar
@@ -107,7 +119,7 @@ class UserList extends React.Component{
 					loading={this.props.loading}
 					rowKey={books => books.id}
 					columns={this.columns}
-					dataSource={this.props.users}
+					dataSource={searchedData}
 					pagination={false}
 				/>
 			</Content>

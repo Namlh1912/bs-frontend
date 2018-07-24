@@ -1,4 +1,5 @@
 import React from 'react';
+import fuse from 'fuse.js';
 import { Table, Layout, Modal, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
@@ -132,6 +133,16 @@ class BookList extends React.Component{
 	}
 
   render(){
+		let searchedData = this.props.books;
+  	if (this.state.searchText.length > 0) {
+			var options = {
+				keys: ['title', 'category', 'publisher', 'author'],
+				threshold: 0.2,
+			};
+			var f = new fuse(this.props.books, options)
+			searchedData = f.search(this.state.searchText);
+		}
+
     return(
         <Content className="content">
 					<ActionBar
@@ -152,7 +163,7 @@ class BookList extends React.Component{
 						loading={this.props.loading}
 						rowKey={books => books.id}
 						columns={this.columns}
-						dataSource={this.props.books}
+						dataSource={searchedData}
 						pagination={false}
           />
         </Content>
