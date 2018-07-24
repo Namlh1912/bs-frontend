@@ -1,6 +1,5 @@
 import axios from 'axios';
 import store from 'store/dist/store.modern';
-import { toast } from "react-toastify";
 import { notification } from 'antd';
 
 notification.config({
@@ -14,12 +13,8 @@ axios.defaults.baseURL = 'http://earthling.studio:9969';
 // Add a request interceptor
 axios.interceptors.request.use((config) => {
   // Do something before request is sent
-  config.headers['x-auth-token'] = store.get('token');
+  config.headers['Authorization'] = store.get('token');
   config.headers['crossdomain']= true;
-  notification.info({
-    message: 'Loading',
-    description: 'Requesting API service',
-  });
   return config;
 }, (error) => {
   // Do something with request error

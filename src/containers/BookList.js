@@ -1,25 +1,21 @@
 import React from 'react';
-import { Table, Input, Button, Layout } from 'antd';
+import { Table, Layout } from 'antd';
 import { Redirect, withRouter } from 'react-router-dom';
 import ActionBar from '../components/ActionBar';
-import books from '../mock/mock-book';
+import {bindActionCreators} from "redux";
+import {list} from "../redux/actions/book";
+import {connect} from "react-redux";
 
 const { Content} = Layout;
 
-const Search = Input.Search;
-
 const columns = [{
-  title: 'ID',
-  dataIndex: 'id',
-  key: 'id',
-	sorter: (a, b) => a.id - b.id,
-}, {
   title: 'Title',
   dataIndex: 'title',
   sorter: (a, b) => a.title.localeCompare(b.title),
 }, {
-  title: 'Type',
-  dataIndex: 'type',
+  title: 'Category',
+	width: 150,
+  dataIndex: 'category',
   sorter: (a, b) => a.type.localeCompare(b.type),
 },{
   title: 'Publisher',
@@ -32,10 +28,12 @@ const columns = [{
 }, {
   title: 'Price',
   dataIndex: 'price',
+	width: 100,
   sorter: (a, b) => a.price - b.price,
 },{
-  title: 'Action',
+  title: '',
   key: 'action',
+	width: 80,
   render: (text, record) => (
     <span>
       <a href="">Delete</a>
@@ -43,7 +41,15 @@ const columns = [{
   ),
 }];
 
-
+@connect(
+	state => ({
+		books: state.book.list,
+		loading: state.book.loading,
+	}),
+	dispatch => ({
+		getBookList: bindActionCreators(list, dispatch),
+	})
+)
 class BookList extends React.Component{
   constructor(props){
     super(props);
@@ -51,11 +57,13 @@ class BookList extends React.Component{
       redirect:false,
       currentId: 0,
       value:'',
-      loading: false,
-      visible: false,
       collapsed: false,
     }
   }
+
+  componentDidMount() {
+  	this.props.getBookList();
+	}
 
   handleSearch = (text) => {
   	console.log(text);
@@ -66,13 +74,6 @@ class BookList extends React.Component{
 	}
 
   render(){
-    const { visible, loading } = this.state;
-    if (this.state.redirect) {
-      return <Redirect push to={{
-        pathname:`/books/${this.state.currentId}`,
-        state: { id: this.state.currentId }
-      }} />;
-    }
     return(
         <Content className="content">
 					<ActionBar
@@ -81,16 +82,17 @@ class BookList extends React.Component{
 					/>
 					<h2>Book List</h2>
 					<Table
+						loading={this.props.loading}
 						onRow={(record) => {
 							return {
 								onClick: () => {
-									this.setState({redirect:true, currentId: record.id});
+									this.props.history.push(`/books/${record.id}`, record)
 								},
 							};
 						}}
 						rowKey={books => books.id}
 						columns={columns}
-						dataSource={books}
+						dataSource={this.props.books}
 						pagination={false}
           />
         </Content>

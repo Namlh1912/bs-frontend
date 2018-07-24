@@ -1,21 +1,35 @@
 import React from 'react';
-import books from '../mock/mock-book';
-import { Form, Input, Button, InputNumber, Upload, Icon, Modal, Layout } from 'antd';
+import { Form, Input, Button, Row, Col, Layout, Icon } from 'antd';
 import ActionBar from '../components/ActionBar';
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {create} from "../redux/actions/book";
 
 const { Content} = Layout;
 
 const FormItem = Form.Item;
 
+@connect(
+	state => ({
+		loading: state.book.loading,
+	}),
+	dispatch => ({
+		createBook: bindActionCreators(create, dispatch),
+	})
+)
 class BookDetail extends React.Component{
   constructor(props){
     super(props);
+
+		let mode = 'New';
+		if (this.props.match.params.hasOwnProperty('id')) mode = 'Edit';
+		console.log(this.props.match);
+
     this.state = {
       number: 0,
       loading: false,
-      previewVisible: false,
-      previewImage: '',
-
+			coverURL: '',
+			mode,
     }
   }
 
@@ -23,7 +37,9 @@ class BookDetail extends React.Component{
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        if (this.state.mode === 'New') {
+					this.props.createBook(values);
+				}
       }
     });
   }
@@ -32,42 +48,93 @@ class BookDetail extends React.Component{
 		this.props.history.push('/books')
   }
 
-  handlePreview = (file) => {
-    this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
-    });
-  }
+	handleBookCoverChange = (e) => {
+		this.setState({
+			coverURL: e.target.value,
+		});
+	}
 
-  handleChange = ({ file }) => this.setState({ file })
+	renderForm = () => {
+		const { getFieldDecorator } = this.props.form;
+  	return (
+			<Form layout="vertical" id="form">
+				<FormItem
+					label="Book Cover"
+				>
+					{getFieldDecorator('imageUrl', {
+						rules: [{ required: true, message: 'This field is required' }],
 
-	normFile = (e) => {
-		console.log('Upload event:', e);
-		if (Array.isArray(e)) {
-			return e;
-		}
-		return e && e.fileList;
+					})(
+						<Input
+							addonAfter={<Icon type="link" />}
+							placeholder="Book cover URL"
+							onChange={this.handleBookCoverChange}
+						/>
+					)}
+				</FormItem>
+				<FormItem
+					label="Title"
+				>
+					{getFieldDecorator('title', {
+						rules: [{ required: true, message: 'This field is required' }],
+					})(
+						<Input placeholder="Book title"/>
+					)}
+				</FormItem>
+
+				<FormItem
+					label="Category"
+				>
+					{getFieldDecorator('category', {
+						rules: [{ required: true, message: 'This field is required' }],
+					})(
+						<Input placeholder="Book category"/>
+					)}
+				</FormItem>
+
+				<FormItem
+					label="Publisher"
+				>
+					{getFieldDecorator('publisher', {
+						rules: [{ required: true, message: 'This field is required' }],
+					})(
+						<Input placeholder="Publisher name"/>
+					)}
+				</FormItem>
+
+				<FormItem
+					label="Author"
+				>
+					{getFieldDecorator('author', {
+						rules: [{ required: true, message: 'This field is required' }],
+					})(
+						<Input placeholder="Author name"/>
+					)}
+				</FormItem>
+
+				<FormItem
+					label="Price"
+				>
+					{getFieldDecorator('price', {
+						rules: [{ required: true, message: 'This field is required' }],
+					})(
+						<Input placeholder="0.0" addonAfter="USD"/>
+					)}
+				</FormItem>
+			</Form>
+		)
 	}
 
   render() {
 		console.log(this.props.match);
-		const { getFieldDecorator } = this.props.form;
-		const formItemLayout = {
-			labelCol: {
-				xs: { span: 24 },
-				sm: { span: 4 },
-			},
-			wrapperCol: {
-				xs: { span: 24 },
-				sm: { span: 18 },
-			},
-		};
+
     return(
 			<Content className="content">
         <ActionBar>
 					<Button
 						type="primary"
 						icon="save"
+						onClick={this.handleSubmit}
 					>
 						Save
 					</Button>
@@ -80,83 +147,17 @@ class BookDetail extends React.Component{
 						Cancel
 					</Button>
         </ActionBar>
-        <h2>New Book</h2>
-        <Form>
-					<FormItem
-						{...formItemLayout}
-						label="Upload"
-						extra="Upload book cover image"
-					>
-						{getFieldDecorator('upload', {
-							valuePropName: 'fileList',
-							getValueFromEvent: this.normFile,
-						})(
-							<Upload name="logo" action="/upload.do" listType="picture">
-								<Button>
-									<Icon type="upload" /> Click to upload
-								</Button>
-							</Upload>
-						)}
-					</FormItem>
-					<FormItem
-						label="Title"
-						{...formItemLayout}
-					>
-						{getFieldDecorator('title', {
-							rules: [{ required: true, message: 'Please input your title!' }],
-						})(
-							<Input placeholder="Title"/>
-						)}
-					</FormItem>
-
-					<FormItem
-						label="Type"
-						{...formItemLayout}
-					>
-						{getFieldDecorator('title', {
-							rules: [{ required: true, message: 'Please input your title!' }],
-							initialValue:"asd"
-						})(
-							<Input/>
-						)}
-					</FormItem>
-
-					<FormItem
-						label="Publisher"
-						{...formItemLayout}
-					>
-						{getFieldDecorator('title', {
-							rules: [{ required: true, message: 'Please input your title!' }],
-							initialValue:"asd"
-						})(
-							<Input/>
-						)}
-					</FormItem>
-
-					<FormItem
-						label="Author"
-						{...formItemLayout}
-					>
-						{getFieldDecorator('title', {
-							rules: [{ required: true, message: 'Please input your title!' }],
-							initialValue:"asd"
-						})(
-							<Input/>
-						)}
-					</FormItem>
-
-					<FormItem
-						label="Price"
-						{...formItemLayout}
-					>
-						{getFieldDecorator('title', {
-							rules: [{ required: true, message: 'Please input your title!' }],
-							initialValue:"asd"
-						})(
-							<Input/>
-						)}
-					</FormItem>
-        </Form>
+        <h2>{this.state.mode} Book</h2>
+				<Row gutter={8} justify="center">
+					<Col lg={6} md={8} sm={24} xs={24}>
+						<div className="book-cover">
+							<div className="image" style={{backgroundImage: `url(${this.state.coverURL})`}}></div>
+						</div>
+					</Col>
+					<Col lg={18} md={16} sm={24} xs={24}>
+						{ this.renderForm() }
+					</Col>
+				</Row>
       </Content>
     )
   }

@@ -18,13 +18,17 @@ export function login (username, password) {
         }),
       });
 
-      const result = {
-				username,
-				password,
-				token: response.headers.authorization,
-				data: response.data.data,
+			if (response.data.data.roleTitle != "admin") {
+				dispatch({type: "USER_LOGIN_FAILURE"});
+			} else {
+				const result = {
+					username,
+					password,
+					token: response.headers.authorization,
+					data: response.data.data,
+				}
+				dispatch({type: "USER_LOGIN_SUCCESS", result});
 			}
-      dispatch({type: "USER_LOGIN_SUCCESS", result});
     } catch (e) {
       dispatch({type: "USER_LOGIN_FAILURE"});
     }
